@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+	<name>twengafeed</name>
+	<displayName><![CDATA[Automation and optimisation for Google Shopping / Merchant Center]]></displayName>
+	<version><![CDATA[1.0.0]]></version>
+	<description><![CDATA[Completely automate your Google Shopping campaigns and improve your ROI by up to 40% in just a few days with Smart FEED by Twenga Solutions.]]></description>
+	<author><![CDATA[PrestaShop]]></author>
+	<tab><![CDATA[smart_shopping]]></tab>
+	<is_configurable>1</is_configurable>
+	<need_instance>1</need_instance>
+	<limited_countries></limited_countries>
+</module>
