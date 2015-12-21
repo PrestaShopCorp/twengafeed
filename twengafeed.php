@@ -24,62 +24,60 @@
 *  International Registered Trademark & Property of PrestaShop SA
 */
 
-if (!defined('_PS_VERSION_'))
-	exit;
+if (!defined('_PS_VERSION_')) {
+    exit;
+}
 
 class twengafeed extends Module
 {
+    public function __construct()
+    {
+        $this->name = 'twengafeed';
+        $this->tab = 'smart_shopping';
+        $this->version = '1.0.0';
+        $this->author = 'PrestaShop';
 
-	public function __construct()
-	{
-		$this->name = 'twengafeed';
-		$this->tab = 'smart_shopping';
-		$this->version = '1.0.0';
-		$this->author = 'PrestaShop';
+        $this->bootstrap = true;
 
-		$this->bootstrap = true;
+        parent::__construct();
 
-		parent::__construct();
+        $this->displayName = $this->l('Automation and optimisation for Google Shopping / Merchant Center');
+        $this->description = $this->l('Completely automate your Google Shopping campaigns and improve your ROI by up to 40% in just a few days with Smart FEED by Twenga Solutions.');
 
-		$this->displayName = $this->l('Automation and optimisation for Google Shopping / Merchant Center');
-		$this->description = $this->l('Completely automate your Google Shopping campaigns and improve your ROI by up to 40% in just a few days with Smart FEED by Twenga Solutions.');
+        if (version_compare(_PS_VERSION_, '1.5', '<') == true) {
+            require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
+        }
+    }
 
-		if (version_compare(_PS_VERSION_, '1.5', '<') == true)
-			require(_PS_MODULE_DIR_.$this->name.'/backward_compatibility/backward.php');
-	}
+    public function install()
+    {
+        return parent::install() && $this->registerHook('backOfficeHeader');
+    }
 
-	public function install()
-	{
-		return parent::install() && $this->registerHook('backOfficeHeader');
-	}
+    public function hookBackOfficeHeader()
+    {
+        if (strcmp(Tools::getValue('configure'), $this->name) === 0) {
+            if (version_compare(_PS_VERSION_, '1.5', '>') == true) {
+                $this->context->controller->addCSS($this->_path.'views/css/configure.css');
 
-	public function hookBackOfficeHeader()
-	{
-		if (strcmp(Tools::getValue('configure'), $this->name) === 0)
-		{
-			if (version_compare(_PS_VERSION_, '1.5', '>') == true)
-			{
-				$this->context->controller->addCSS($this->_path.'views/css/configure.css');
+                if (version_compare(_PS_VERSION_, '1.6', '<') == true) {
+                    $this->context->controller->addCSS($this->_path.'views/css/configure-nobootstrap.css');
+                }
+            } else {
+                $html = '<link rel="stylesheet" href="'.$this->_path.'views/css/configure.css" type="text/css" />';
+                $html .= '<link rel="stylesheet" href="'.$this->_path.'views/css/configure-nobootstrap.css" type="text/css" />';
 
-				if (version_compare(_PS_VERSION_, '1.6', '<') == true)
-					$this->context->controller->addCSS($this->_path.'views/css/configure-nobootstrap.css');
-			}
-			else
-			{
-				$html = '<link rel="stylesheet" href="'.$this->_path.'views/css/configure.css" type="text/css" />';
-				$html .= '<link rel="stylesheet" href="'.$this->_path.'views/css/configure-nobootstrap.css" type="text/css" />';
+                return $html;
+            }
+        }
+    }
 
-				return $html;
-			}
-		}
-	}
+    public function getContent()
+    {
+        $this->context->smarty->assign(array(
+            'module_dir' => $this->_path,
+        ));
 
-	public function getContent()
-	{
-		$this->context->smarty->assign(array(
-			'module_dir' => $this->_path,
-		));
-
-		return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
-	}
+        return $this->display(__FILE__, 'views/templates/admin/configure.tpl');
+    }
 }
